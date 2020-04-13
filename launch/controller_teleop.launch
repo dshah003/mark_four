@@ -12,9 +12,8 @@
  <!-- Axes -->
   <param name="axis_linear" value="1" type="int"/>
   <param name="axis_angular" value="0" type="int"/>
-  <param name="scale_linear" value="2" type="double"/>
-  <param name="scale_angular" value="2" type="double"/>
-  <node pkg="mark_four" type="mark_four_teleop" name="teleop" output="screen"/>
+  <param name="scale_linear" value="0.2" type="double"/>
+  <param name="scale_angular" value="1.5707" type="double"/>  <node pkg="mark_four" type="mark_four_teleop" name="teleop" output="screen"/>
   
   <node pkg="rosserial_python" type="serial_node.py" name="serial_node" output="screen">
     <param name="port" type="string" value="/dev/ttyACM0"/>
