@@ -18,19 +18,59 @@ An experimental robotic platform with mobility and robotic arm.
 sudo apt-get install ros-melodic-joy
 ```
 
+**kinect related packages**  
+
+Install OpenNI and dependency
+
+```sh
+sudo apt-get install ros-melodic-openni-*  
+sudo apt-get install git build-essential python libusb-1.0-0-dev freeglut3-dev  
+
+```
+
+Install RTAB mapping package  
+
+```sh
+sudo apt-get install ros-melodic-rtabmap-ros   
+```
+
+To Test installation, connect the kinect sensor and run the following commands:  
+```sh
+roslaunch openni_launch openni.launch depth_registration:=true  
+roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start"  
+
+```
+
+Reference:  
+[https://github.com/introlab/rtabmap/wiki/Installation]  
+[http://wiki.ros.org/rtabmap_ros]
+
+
+
 ### Instructions
 
-To operate the robot, use the following command to run the launch file.
+**To operate the robot,**  
+Make sure arduino is connected to the computer via USB and running the script arduino_code/marky_controller.ino  
+Make sure the joystick usb dongle is also connected.  
+Use the following command to run the launch file.
 
 ```sh
 roslaunch mark_four controller_teleop.launch
 ```
 
-### Publishers
+**To test the kinect**  
+
+```sh
+roslaunch openni_launch openni.launch  
+rosrun rviz rviz   
+```
+For more info, refer: [https://wiki.ros.org/openni_launch]  
 
 
-### Subscribers
+### Topics  
 
+- /joy: Joystick commands are published by joy package and subscribed by controller node.
+- /mark_four/cmd_vel: All the motion commands to the arduino node are published on this topic as velocity commands.
 
 ### Notes  
 

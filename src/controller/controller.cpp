@@ -121,10 +121,10 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "mark_four");
   MarkFourController markfour_controller;
 
-  double speed, angular_speed;
-  double distance, angle;
-  bool isForward, clockwise;
-  ROS_INFO("\n \n *** TESTING *** \n \n ");
+  // ROS_INFO("\n \n *** TESTING *** \n \n ");
+  // double speed, angular_speed;
+  // double distance, angle;
+  // bool isForward, clockwise;
   // while(true) {
     // std::cout<<"Enter speed: ";
     // std::cin>>speed;
@@ -136,16 +136,16 @@ int main(int argc, char** argv) {
     // ros::Duration(3).sleep();
     // ROS_INFO("\n\n*MOVED FORWARD*\n\n");
 
-    std::cout<<"enter angular velocity (degree/sec): ";
-    std::cin>>angular_speed;
-    std::cout<<"enter desired angle (degrees): ";
-    std::cin>>angle;
-    std::cout<<"clockwise ?: ";
-    std::cin>>clockwise;
-    markfour_controller.rotate(degrees2radians(angular_speed), 
-        degrees2radians(angle), clockwise);
-    ros::Duration(3).sleep();
-    ROS_INFO("\n\n*DONE TURNING*\n\n");
+    // std::cout<<"enter angular velocity (degree/sec): ";
+    // std::cin>>angular_speed;
+    // std::cout<<"enter desired angle (degrees): ";
+    // std::cin>>angle;
+    // std::cout<<"clockwise ?: ";
+    // std::cin>>clockwise;
+    // markfour_controller.rotate(degrees2radians(angular_speed), 
+    //     degrees2radians(angle), clockwise);
+    // ros::Duration(3).sleep();
+    // ROS_INFO("\n\n*DONE TURNING*\n\n");
       
   ros::spin();
 }
