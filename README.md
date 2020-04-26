@@ -18,6 +18,12 @@ An experimental robotic platform with mobility and robotic arm.
 sudo apt-get install ros-melodic-joy
 ```
 
+**Robot model**
+```sh
+sudo apt-get install ros-melodic-joint-state-publisher ros-melodic-joint-state-publisher-gui
+sudo apt-get install urdf
+```
+
 **kinect related packages**  
 
 Install OpenNI and dependency
