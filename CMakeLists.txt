@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rostime
   std_msgs
+  joint_state_controller
+  robot_state_publisher
 )
 
 ## System dependencies are found with CMake's conventions
@@ -134,8 +136,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_teleop src/controller/controller.cpp)
-target_link_libraries(${PROJECT_NAME}_teleop ${catkin_LIBRARIES})
+add_executable(${PROJECT_NAME}_controller src/controller/controller.cpp)
+target_link_libraries(${PROJECT_NAME}_controller ${catkin_LIBRARIES})
 
 
 ## Rename C++ executable without prefix

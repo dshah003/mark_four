@@ -18,12 +18,6 @@ An experimental robotic platform with mobility and robotic arm.
 sudo apt-get install ros-melodic-joy
 ```
 
-**Robot model**
-```sh
-sudo apt-get install ros-melodic-joint-state-publisher ros-melodic-joint-state-publisher-gui
-sudo apt-get install urdf
-```
-
 **kinect related packages**  
 
 Install OpenNI and dependency
@@ -44,6 +38,23 @@ To Test installation, connect the kinect sensor and run the following commands:
 ```sh
 roslaunch openni_launch openni.launch depth_registration:=true  
 roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start"  
+
+```  
+
+**Navigation Stack**
+
+Go to your catkin worspace/src folder and clone the navigation repo
+```
+git clone https://github.com/ros-planning/navigation.git
+```
+
+**Misc Supporting packages**
+
+```sh
+sudo apt-get install ros-melodic-joint-state-publisher ros-melodic-joint-state-publisher-gui
+sudo apt-get install urdf  
+sudo apt-get install ros-melodic-tf2-sensor-msgs
+sudo apt-get install libsdl-dev libsdl-image1.2-dev
 
 ```
 

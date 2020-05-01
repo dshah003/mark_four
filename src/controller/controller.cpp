@@ -45,7 +45,13 @@ void MarkFourController::JoyCallback(const sensor_msgs::Joy::ConstPtr& joy) {
   vel_pub_.publish(twist);
 }
 
-
+/**
+ * @brief      Provides vel commands to move in straight line
+ *
+ * @param[in]  speed      The speed
+ * @param[in]  distance   The distance
+ * @param[in]  isForward  Indicates if forward
+ */
 void MarkFourController::move(double speed, double distance, bool isForward) {
   geometry_msgs::Twist vel_msg;
   //set a random linear velocity in the x-axis
@@ -79,6 +85,13 @@ void MarkFourController::move(double speed, double distance, bool isForward) {
   return;
 }
 
+/**
+ * @brief      Provides vel commands to rotate the robot.
+ *
+ * @param[in]  angular_speed   The angular speed
+ * @param[in]  relative_angle  The relative angle
+ * @param[in]  clockwise       The clockwise
+ */
 void MarkFourController::rotate (double angular_speed, double relative_angle, bool clockwise) {
   geometry_msgs::Twist vel_msg;
   //set a random linear velocity in the x-axis
@@ -118,7 +131,7 @@ double degrees2radians(double angle_in_degrees) {
 
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "mark_four");
+  ros::init(argc, argv, "controller_node");
   MarkFourController markfour_controller;
 
   // ROS_INFO("\n \n *** TESTING *** \n \n ");
