@@ -43,10 +43,13 @@ roslaunch rtabmap_ros rtabmap.launch rtabmap_args:="--delete_db_on_start"
 
 **Navigation Stack**
 
-Go to your catkin worspace/src folder and clone the navigation repo
+Go to your catkin worspace/src folder and clone/install the following packages
 ```
 git clone https://github.com/ros-planning/navigation.git
-```
+sudo apt-get install ros-melodic-depthimage-to-laserscan
+
+```  
+Do not forget to ```catkin_make``` once the packages are cloned.  
 
 **Misc Supporting packages**
 
@@ -91,4 +94,5 @@ For more info, refer: [https://wiki.ros.org/openni_launch]
 
 ### Notes  
 
-- No matter the source of input (joystick/autonomous), eventually all the motion related commands are convertered into velocity commands and published over /vel_cmd
+- No matter the source of input (joystick/autonomous), eventually all the motion related commands are convertered into velocity commands and published over /vel_cmd  
+- Edit the "camera" argument in openni_launch/openni.launch from "camera" to "kinect"

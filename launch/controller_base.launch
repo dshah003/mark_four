@@ -1,6 +1,6 @@
 <launch>
  
-  <group ns="mark_four">
+<!--   <group ns="mark_four"> -->
   <!-- Robot Model -->
     <arg name="model" default="$(find mark_four)/urdf/mark_four.urdf"/>
     <arg name="gui" default="false" />
@@ -35,6 +35,13 @@
     <!-- kinect and Rtabmap odometry launchfile -->
     <include file="$(find openni_launch)/launch/openni.launch" />
     <include file="$(find mark_four)/launch/controller_odometry.launch"/>
-  </group>
+    
+    
+    <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan">
+      <param name="scan_height" value="10"/>
+      <remap from="image" to="kinect/depth_registered/image_raw" />
+    </node>
+    
+  <!-- </group> -->
 
 </launch>
