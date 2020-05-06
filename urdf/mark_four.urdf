@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot name="mark_four">
-  
+
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
   </material>
@@ -16,10 +16,19 @@
   <link name="base_link">
     <visual>
       <geometry>
-        <box size="0.18 0.12 0.04"/>
+        <box size="0.22 0.20 0.05"/>
       </geometry>
       <material name="white"/>
     </visual>
+    <collision>
+      <geometry>
+        <box size="0.22 0.20 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+         <mass value="0.5"/>
+         <inertia ixx="0.0067" ixy="0.0" ixz="0.0" iyy="0.0083" iyz="0.0" izz="0.0017"/>
+     </inertial>
   </link>
 
   <link name="right_wheel">
@@ -30,6 +39,16 @@
       <origin rpy="-1.5708 0 0" xyz="0 0 0"/>
       <material name="blue"/>
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.01" radius="0.035"/>
+      </geometry>
+      <origin rpy="-1.5708 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+        <inertia ixx="0.000019" ixy="0.0" ixz="0.0" iyy="0.000019" iyz="0.0" izz="0.0000052"/>
+    </inertial>
   </link>
 
   <joint name="base_to_right_wheel" type="continuous">
@@ -49,6 +68,16 @@
       <origin rpy="-1.5708 0 0" xyz="-0 0 0"/>
       <material name="blue"/>
     </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.01" radius="0.035"/>
+      </geometry>
+      <origin rpy="-1.5708 0 0" xyz="-0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+        <inertia ixx="0.000019" ixy="0.0" ixz="0.0" iyy="0.000019" iyz="0.0" izz="0.0000052"/>
+    </inertial>
   </link>
 
   <joint name="base_to_left_wheel" type="continuous">
@@ -138,5 +167,27 @@
     <child link="kinect_link"/>
     <origin rpy="0 0 3.14159" xyz="-0.12 0 0.06"/>
   </joint>
+
+  <transmission name="left_wheel_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="base_to_left_wheel">
+    <hardwareInterface>hardware_interface/JointStateController</hardwareInterface>  
+  </joint>
+  <actuator name="left_wheel_actuator">
+    <mechanicalReduction>1</mechanicalReduction>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+  </actuator>
+</transmission>
+ 
+<transmission name="right_wheel_transmission">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="base_to_right_wheel">
+    <hardwareInterface>hardware_interface/JointStateController</hardwareInterface>  
+  </joint>
+  <actuator name="right_wheel_actuator">
+    <mechanicalReduction>1</mechanicalReduction>
+    <hardwareInterface>VelocityJointInterface</hardwareInterface>
+  </actuator>
+</transmission>
 
 </robot>
