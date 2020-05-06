@@ -11,6 +11,7 @@ An experimental robotic platform with mobility and robotic arm.
 - Visual Odometry
 - 3D Mapping of the scene.
 - 2D occupancy grid creation.
+- Ability to localize self in a pre-existing map.
 
 
 ### Package requirments:  

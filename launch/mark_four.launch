@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="localising_mode" default ="false"/>
+  <arg name="localization" default="false"/>
   <arg name="database_path" default="$(find mark_four)/data/rtabmap.db"/>
 
 	<!-- Base controller with tf, joystick and arduino interface-->
@@ -11,9 +11,9 @@
   
   <include file="$(find mark_four)/launch/rtab_mapping.launch">
       <arg name="database_path" value="$(arg database_path)"/>
+      <arg name="localization" value="$(arg localization)"/>
   </include>
 
-  <include if="$(arg localising_mode)" file="$(find mark_four)/launch/rtabmap_localization.launch"/>
     <!-- Creating fake 2D scan -->
  <!--  <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan">
     <param name="scan_height" value="10"/>
