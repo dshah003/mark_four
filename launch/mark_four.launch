@@ -6,7 +6,10 @@
 	<!-- Base controller with tf, joystick and arduino interface-->
   <include file="$(find mark_four)/launch/controller_base.launch"/>
 	<!-- kinect and Rtabmap odometry launchfile -->
-  <include file="$(find openni_launch)/launch/openni.launch" />
+  <include file="$(find openni_launch)/launch/openni.launch" >
+	<arg name="camera" value="kinect"/>
+	<arg name="depth_registration" value="true"/>
+  </include>
   <include file="$(find mark_four)/launch/controller_odometry.launch"/>
   
   <include file="$(find mark_four)/launch/rtab_mapping.launch">
