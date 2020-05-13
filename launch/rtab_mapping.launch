@@ -1,9 +1,13 @@
 <launch>
 	<arg name="database_path" default="$(find mark_four)/data/rtabmap1.db"/>
+    <arg name="frame_id"                default="base_link" />
      <arg name="localization" default="false"/>
      <arg if="$(arg localization)" name="args" default=""/>
      <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
      <arg name="wait_for_transform"  default="0.2"/> 
+     <arg name="imu_topic"               default="/imu/data" />
+     <arg name="imu_ignore_acc"          default="true" />
+     <arg name="imu_remove_gravitational_acceleration" default="true" />
 	<group ns="rtabmap">
 		<node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg args)">
           <param name="frame_id" type="string" value="base_link"/>
@@ -13,7 +17,9 @@
           <param name="wait_for_transform_duration" type="double" value="$(arg wait_for_transform)"/>
           <param name="map_negative_poses_ignored" type="bool" value="true"/>
           <param name="use_action_for_goal" type="bool" value="true"/>
-          
+
+          <param name="proj_max_ground_angle" value="45"/>
+          <param name="proj_max_ground_height" value="0.2"/>          
           <remap from="move_base"            to="/move_base"/>
 
           <param name="queue_size"  type="int"  value="10"/>
@@ -25,14 +31,102 @@
           <param name="RGBD/LinearUpdate"         type="string" value="0.02"/>
           <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/>
           <param name="RGBD/ProximityPathMaxNeighbors" type="string" value="0"/> 
-		<param name="Rtabmap/TimeThr"         type="string" value="0"/>
-		<param name="Mem/RehearsalSimilarity" type="string" value="0.30"/>
-		<param name="Reg/Force3DoF"           type="string" value="true"/>
-		<param name="GridGlobal/MinSize"      type="string" value="20"/>
+      		<param name="Rtabmap/TimeThr"         type="string" value="0"/>
+      		<param name="Mem/RehearsalSimilarity" type="string" value="0.30"/>
+      		<param name="Reg/Force3DoF"           type="string" value="true"/>
+      		<param name="GridGlobal/MinSize"      type="string" value="20"/>
 
           <param if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
           <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
           <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/> 
 	    </node>
+
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true" output="screen">
+
+            <param name="frequency" value="50"/>
+            <param name="sensor_timeout" value="0.1"/>
+            <param name="two_d_mode" value="false"/>
+
+            <param name="odom_frame" value="odom"/>
+            <param name="base_link_frame" value="$(arg frame_id)"/>
+            <param name="world_frame" value="odom"/>
+
+            <param name="transform_time_offset" value="0.0"/>
+
+            <param name="odom0" value="/vo"/>
+            <param name="imu0" value="$(arg imu_topic)"/> 
+
+            <!-- The order of the values is x, y, z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az. -->
+            <rosparam param="odom0_config">[true, true, true,
+                                        false, false, false,
+                                        true, true, true,
+                                        false, false, false,
+                                        false, false, false]</rosparam>
+
+            <rosparam     if="$(arg imu_ignore_acc)" param="imu0_config">[
+                                       false, false, false,
+                                       true,  true,  true,
+                                       false, false, false,
+                                       true,  true,  true,
+                                       false,  false,  false] </rosparam>
+            <rosparam unless="$(arg imu_ignore_acc)" param="imu0_config">[
+                                       false, false, false,
+                                       true,  true,  true,
+                                       false, false, false,
+                                       true,  true,  true,
+                                       true,  true,  true] </rosparam>  
+
+            <param name="odom0_differential" value="false"/>
+            <param name="imu0_differential" value="false"/>
+
+            <param name="odom0_relative" value="true"/>
+            <param name="imu0_relative" value="true"/>
+
+            <param name="imu0_remove_gravitational_acceleration" value="$(arg imu_remove_gravitational_acceleration)"/>
+
+            <param name="print_diagnostics" value="true"/>
+
+            <!-- ======== ADVANCED PARAMETERS ======== -->
+            <param name="odom0_queue_size" value="5"/>
+            <param name="imu0_queue_size" value="50"/> 
+
+            <!-- The values are ordered as x, y, z, roll, pitch, yaw, vx, vy, vz,
+             vroll, vpitch, vyaw, ax, ay, az. -->
+            <rosparam param="process_noise_covariance">[0.005, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0.005, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0.006, 0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0.003, 0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0.003, 0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0.006, 0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0.0025, 0,     0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0.0025, 0,    0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0.004, 0,    0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0,    0.001, 0,    0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.001, 0,    0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.002, 0,    0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.001, 0,    0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.001, 0,
+                                                    0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.0015]</rosparam>
+
+            <!-- The values are ordered as x, y,
+             z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az. -->
+             <rosparam param="initial_estimate_covariance">[1e-9, 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    1e-9, 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    1e-9, 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    1e-9, 0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    1e-9, 0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    1e-9, 0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    1e-9, 0,    0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    1e-9, 0,    0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    1e-9, 0,     0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    0,    1e-9,  0,     0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1e-9,  0,     0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1e-9,  0,    0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
+                                                            0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]</rosparam>
+
+        </node>
+
     </group>
 </launch>
