@@ -14,7 +14,18 @@ An experimental robotic platform with mobility and robotic arm.
 - Ability to localize self in a pre-existing map.
 
 
-### Package requirments:  
+### Package requirments: 
+
+**Arduino Interface**
+
+Install arduino IDE by following https://github.com/JetsonHacksNano/installArduinoIDE/blob/master/installArduinoIDE.sh 
+```sh
+sudo apt-get install ros-melodic-rosserial-arduino
+sudo apt-get install ros-melodic-rosserial
+cd ~/arduino-1.8.10/libraries
+rm -rf ros_lib
+rosrun rosserial_arduino make_libraries.py .
+```
 
 **Joystick driver**
 
@@ -24,11 +35,54 @@ sudo apt-get install ros-melodic-joy
 
 **kinect related packages**  
 
-Install OpenNI and dependency
+Install Open kinect library.
 
 ```sh
-sudo apt-get install ros-melodic-openni-*  
-sudo apt-get install git build-essential python libusb-1.0-0-dev freeglut3-dev  
+sudo apt-get install git-core cmake libglut3-dev pkg-config build-essential libxmu-dev libxi-dev libusb-1.0-0-dev
+```
+Note: If you getting an error saying apt-get cannot find libglut3:
+
+```sh
+sudo apt-get install git-core cmake freeglut3-dev pkg-config build-essential libxmu-dev libxi-dev libusb-1.0-0-dev
+
+git clone git://github.com/OpenKinect/libfreenect.git
+cd libfreenect
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig /usr/local/lib64/
+sudo adduser $USER video
+sudo nano /etc/udev/rules.d/51-kinect.rules
+```
+Copy and paste:
+
+```sh
+# ATTR{product}=="Xbox NUI Motor"
+SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02b0", MODE="0666"
+# ATTR{product}=="Xbox NUI Audio"
+SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02ad", MODE="0666"
+# ATTR{product}=="Xbox NUI Camera"
+SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02ae", MODE="0666"
+# ATTR{product}=="Xbox NUI Motor"
+SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02c2", MODE="0666"
+# ATTR{product}=="Xbox NUI Motor"
+SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02be", MODE="0666"
+# ATTR{product}=="Xbox NUI Motor"
+SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02bf", MODE="0666"
+sudo freenect-glview
+```
+Check installation:
+```sh
+freenect-glview
+```
+
+Install and test ROS package
+```sh
+sudo apt-get install ros-melodic-freenect-launch
+
+roslaunch freenect_launch freenect.launch
 
 ```
 
@@ -58,8 +112,8 @@ Do not forget to ```catkin_make``` once the packages are cloned.
 **Misc Supporting packages**
 
 ```sh
-sudo apt-get install ros-melodic-joint-state-publisher ros-melodic-joint-state-publisher-gui
-sudo apt-get install urdf  
+sudo apt-get install ros-melodic-joint-state-publisher ros-melodic-joint-state-publisher-gui sudo apt-get install ros-melodic-joint-state-controller
+sudo apt-get install ros-melodic-urdf  
 sudo apt-get install ros-melodic-tf2-sensor-msgs
 sudo apt-get install libsdl-dev libsdl-image1.2-dev
 
