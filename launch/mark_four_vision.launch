@@ -1,0 +1,8 @@
+<launch>
+  <!-- TELEOP USING JOYSTICK AND VIDEO STEAM FROM USB CAMERA -->
+  
+  <!-- Base controller with tf, joystick and arduino interface-->
+  <include file="$(find mark_four)/launch/controller_base.launch"/>
+  <!-- Launch Camera driver and stream video to ROS Topic -->
+  <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+</launch>
