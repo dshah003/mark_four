@@ -52,10 +52,10 @@ void MobilityCallback(const geometry_msgs::Twist& vel_msg) {
     RightWheel.writeMicroseconds(2800 - right_pwm);
     char buff[10];
     nh.loginfo("Left Wheel: ");
-    itoa((2800 - left_pwm), buff, 10);
+    itoa(left_pwm, buff, 10);
     nh.loginfo(buff);
     nh.loginfo("Right Wheel: ");
-    itoa(right_pwm, buff, 10);
+    itoa((2800 - right_pwm), buff, 10);
     nh.loginfo(buff);
     
   linear_vel.data = int(left_pwm);
