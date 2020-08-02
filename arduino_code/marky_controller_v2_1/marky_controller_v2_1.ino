@@ -37,11 +37,18 @@ void MobilityCallback(const geometry_msgs::Twist& vel_msg) {
   double ang_vel = vel_msg.angular.z;
   int left_pwm, right_pwm;
 
-  if (abs(lin_vel) > 0.17) { //restricting the max lin vel to 0.17
+  if (lin_vel > 0.17) { //restricting the max lin vel to 0.17
     lin_vel = 0.17;
   }
-  if (abs(ang_vel) > 1.5) { //Restricting the max rotational vel to 1.5 rad/s
+  if (lin_vel < -0.17) { //restricting the max lin vel to 0.17
+    lin_vel = -0.17;
+  }
+  
+  if (ang_vel > 1.5) { //Restricting the max rotational vel to 1.5 rad/s
     ang_vel = 1.5;
+  }
+  if (ang_vel < -1.5) { //Restricting the max rotational vel to 1.5 rad/s
+    ang_vel = -1.5;
   }
 
   float vel_ang = (ang_vel * R)/2;
